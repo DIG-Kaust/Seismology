@@ -1,0 +1,21 @@
+name: seismologycourse
+channels:
+  - defaults
+  - conda-forge
+  - numba
+dependencies:
+  - python>=3.6.4
+  - numpy>=1.15.0
+  - scipy>=1.4.0
+  - pandas
+  - matplotlib
+  - ipython
+  - jupyter
+  - seaborn
+  - scikit-learn
+  - pylops
+  - numba
+  - icc_rt
+  - pip:
+    - lasio
+    - segyio
