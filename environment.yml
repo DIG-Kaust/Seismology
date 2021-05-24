@@ -2,7 +2,6 @@ name: seismologycourse
 channels:
   - defaults
   - conda-forge
-  - numba
 dependencies:
   - python>=3.6.4
   - numpy>=1.15.0
@@ -13,9 +12,12 @@ dependencies:
   - jupyter
   - seaborn
   - scikit-learn
+  - scikit-image
   - pylops
-  - numba
-  - icc_rt
+  - cartopy
   - pip:
     - lasio
     - segyio
+    - obspy
+    - utm
+    - pyproj
