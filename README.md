@@ -1,6 +1,6 @@
 ![Seismology](https://github.com/DIG-Kaust/Seismology/blob/main/logo.png)
 
-Teaching material for ErSE 2010 Seismology course to be held at KAUST during the Fall semester.
+Teaching material for ErSE 210 Seismology course to be held at KAUST during the Fall semester.
 
 ## Material
 
