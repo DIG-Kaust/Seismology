@@ -1,9 +1,11 @@
+![Seismology](https://github.com/DIG-Kaust/Seismology/blob/main/logo.png)
+
 # ErSE 2010 Seismology - teaching material
 Teaching material for ErSE 2010 Seismology course to be held at KAUST during the Fall semester.
 
 ## Material
 
-Each folder in this repository contains python codes and Jupiter notebooks used in the practical sessions (labs):
+Each folder in this repository contains Python codes and Jupyter Notebooks used in the practical sessions:
 
 - **PlaneWave**: create and display plane waves in time-space and wavenumber domain.
 - **GassmannFluidSub**: implement basic rock physics equations and Gassmann substitution and apply it to the Smehaia well log.
