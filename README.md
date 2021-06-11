@@ -4,15 +4,19 @@ Teaching material for ErSE 210 Seismology course to be held at KAUST during the 
 
 ## Material
 
-Each folder in this repository contains Python codes and Jupyter Notebooks used in the practical sessions:
+The repository is organized as follows:
 
-- **PlaneWave**: create and display plane waves in time-space and wavenumber domain.
-- **GassmannFluidSub**: implement basic rock physics equations and Gassmann substitution and apply it to the Smehaia well log.
-- **SeismicModelling**: perform convolutional and AVO modelling, and apply pre-stack inversion
-- **RayTrace**: implement 2D raytracing by solving the associated ODE
-- **SeismicTomography**: setup the 2D tomographic matrix and solve the associated inverse problem
-- **Obspy**: a mild introduction to Obspy and its usage for epicenter localization of earthquakes
-- **ReflectionSeismic**: implement basic NMO processing and learn how to work with SEGY files using *segyio* and the Volve dataset.
+- **Slides**: deck of slides summarizing the key concept introduced in each class
+- **Data**: input data used in the practical sessions:
+- All of the other folders in this repository contains Python codes and Jupyter Notebooks used in the practical sessions:
+
+   - **PlaneWave**: create and display plane waves in time-space and wavenumber domain.
+   - **GassmannFluidSub**: implement basic rock physics equations and Gassmann substitution and apply it to the Smehaia well log.
+   - **SeismicModelling**: perform convolutional and AVO modelling, and apply pre-stack inversion
+   - **RayTrace**: implement 2D raytracing by solving the associated ODE
+   - **SeismicTomography**: setup the 2D tomographic matrix and solve the associated inverse problem
+   - **Obspy**: a mild introduction to Obspy and its usage for epicenter localization of earthquakes
+   - **ReflectionSeismic**: implement basic NMO processing and learn how to work with SEGY files using *segyio* and the Volve dataset.
 
 ## Environment
 
