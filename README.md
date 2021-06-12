@@ -6,7 +6,7 @@ Teaching material for ErSE 210 Seismology course to be held at KAUST during the 
 
 The repository is organized as follows:
 
-- **Slides**: deck of slides summarizing the key concept introduced in each class
+- **Slides**: deck of slides summarizing the key concept introduced in each class. Some of the figures in these slides are taken from the reference textbook (Shearer, P., Introduction to Seismology). 
 - **Data**: input data used in the practical sessions:
 - All of the other folders in this repository contains Python codes and Jupyter Notebooks used in the practical sessions:
 
