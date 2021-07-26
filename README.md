@@ -27,3 +27,10 @@ After that simply run:
 ./install_env.sh
 ```
 It will take some time, if at the end you see the work `Done!` on your terminal you are ready to go!
+
+## Binder
+
+Alternatively, you can work directly on Binder. Simply click this button and access
+the material from your web browser without the need for any local installation
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DIG-Kaust/Seismology/HEAD)
