@@ -261,17 +261,15 @@ class Fluid(Elastic):
 
     A Fluid object is a container for properties of a fluids to be mixed.
     It takes the fluid composition of multiple fluids in
-    :obj:`ptcpy.proc.rockphysics.fluid.Oil` or :obj:`ptcpy.proc.rockphysics.fluid.Brine` or
-    :obj:`ptcpy.proc.rockphysics.fluid.Gas` objects and their fractions
+    :obj:`Oil` or :obj:`Brine` or
+    :obj:`Gas` objects and their fractions
     and combines them.
 
     Parameters
     ----------
     fluids : :obj:`dict`
-        Set of tuples of Fluids in :obj:`ptcpy.proc.rockphysics.fluid.Oil`
-        or :obj:`ptcpy.proc.rockphysics.fluid.Brine` or
-        :obj:`ptcpy.proc.rockphysics.fluid.Gas` objects objects and their
-        fractions
+        Set of tuples of Fluids in :obj:`Oil` or :obj:`Brine` or
+        :obj:`Gas` objects objects and their fractions
 
     """
     def __init__(self, fluids):

@@ -5,11 +5,6 @@ import datetime
 import numpy as np
 import matplotlib.colors as pltcolors
 import matplotlib.pyplot as plt
-#import shapely.geometry as geometry
-
-#from descartes import PolygonPatch
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from .poststack import zerooffset_mod
 
 try:
     from IPython.display import display_html, display, Javascript

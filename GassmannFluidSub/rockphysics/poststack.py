@@ -59,7 +59,7 @@ def zerooffset_wellmod(logs, zaxis, sampling, wav, ax=None, zaxisshift=0.0,
 
     Parameters
     ----------
-    logs : :obj:`ptcpy.objects.Logs.Logs`
+    logs : :obj:`Logs`
         Logs object
     zaxis : :obj:`str`
         Label of log to use as z-axis

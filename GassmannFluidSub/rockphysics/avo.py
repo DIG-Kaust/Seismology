@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from functools import wraps
-from scipy.signal import convolve, fftconvolve
+from scipy.signal import fftconvolve
 
 from .elastic import backus
 from .visualutils import _wiggletracecomb
@@ -15,7 +15,7 @@ def _prepare(func):
     Parameters
     ----------
     func : :obj:`def`
-        Any of the methods used :func:`ptcpy.proc.seismicmod.avo.angle_reflectivity`
+        Any of the methods used :func:`angle_reflectivity`
 
     """
     @wraps(func)

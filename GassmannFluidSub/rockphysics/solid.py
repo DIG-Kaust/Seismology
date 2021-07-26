@@ -1,4 +1,3 @@
-import logging
 import numpy as np
 
 from .elastic import Elastic
@@ -11,7 +10,7 @@ class Matrix():
 
     A Matrix object is a container for properties of a mineral matrix.
     It takes the mineral composition of multiple rock types in
-    :obj:`ptcpy.proc.rockphysics.elastic.Elastic` objects and their fractions
+    :obj:`elastic.Elastic` objects and their fractions
     in the matrix and combines them.
 
     Parameters
@@ -66,9 +65,9 @@ class Rock(Elastic):
         S-wave velocity in m/s
     rho : :obj:`float` or :obj:`numpy.ndarray`
         Density in kg/m3
-    matrix : :obj:`ptcpy.proc.rockphysics.elastic.Matrix`
+    matrix : :obj:`elastic.Matrix`
         Matrix
-    fluid : :obj:`ptcpy.proc.rockphysics.fluid.Fluid`
+    fluid : :obj:`fluid.Fluid`
         Fluid definition
     poro : :obj:`float` or :obj:`numpy.ndarray`
         Porosity

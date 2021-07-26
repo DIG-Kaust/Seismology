@@ -11,7 +11,7 @@ The repository is organized as follows:
 - All of the other folders in this repository contains Python codes and Jupyter Notebooks used in the practical sessions:
 
    - [**PlaneWave**](https://github.com/DIG-Kaust/Seismology/blob/main/PlaneWave/PlaneWave.ipynb): create and display plane waves in time-space and wavenumber domain.
-   - **GassmannFluidSub**: implement basic rock physics equations and Gassmann substitution and apply it to the Smehaia well log.
+   - [**GassmannFluidSub**](https://github.com/DIG-Kaust/Seismology/blob/main/GassmannFluidSub/Gassmann.ipynb): implement basic rock physics equations and Gassmann substitution and apply it to the Smehaia well log.
    - **SeismicModelling**: perform convolutional and AVO modelling, and apply pre-stack inversion
    - **RayTrace**: implement 2D raytracing by solving the associated ODE
    - **SeismicTomography**: setup the 2D tomographic matrix and solve the associated inverse problem

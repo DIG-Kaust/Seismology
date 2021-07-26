@@ -469,7 +469,7 @@ class Logs:
 
         Returns
         -------
-        logscopy : :obj:`ptcpy.objects.Logs`
+        logscopy : :obj:`Logs`
             Copy of Logs object
 
         """
@@ -529,47 +529,6 @@ class Logs:
                                unit='' if unit is None else unit,
                                descr='' if descr is None else descr,
                                value='' if value is None else value)
-        self.dataframe()
-
-    def add_tvdss(self, trajectory):
-        """Add TVDSS curve (and interpolate from trajectory to logs sampling)
-
-        Parameters
-        ----------
-        trajectory : :obj:`ptcpy.objects.Trajectory`
-            Curve to be added
-
-        """
-        # create regular tvdss axis for mapping of picks
-        md = trajectory.df['MD (meters)']
-        tvdss = trajectory.df['TVDSS']
-
-        f = interp1d(md, tvdss, kind='linear',
-                     bounds_error=False, assume_sorted=True)
-        tvdss_log = f(self.logs.index)
-        self.logs.append_curve('TVDSS', tvdss_log, unit='m', descr='TVDSS')
-        self.dataframe()
-
-    def add_twt(self, tdcurve, name):
-        """Add TWT curve (and interpolate from trajectory to logs sampling)
-
-        Parameters
-        ----------
-        tdcurve : :obj:`ptcpy.objects.TDcurve`
-            TD curve or checkshots
-        tdcurve : :obj:`ptcpy.objects.TDcurve`
-            name of TD or checkshot curve to be used within Logs object
-
-        """
-        # create regular tvdss axis for mapping of picks
-        md = tdcurve.df['Md (meters)']
-        twt = tdcurve.df['Time (ms)']
-
-        f = interp1d(md, twt, kind='linear',
-                     bounds_error=False, assume_sorted=True)
-        twt_log = f(self.logs.index)
-        self.logs.append_curve('TWT - {}'.format(name),
-                               twt_log, unit='ms', descr='TWT')
         self.dataframe()
 
     def delete_curve(self, mnemonic, verb=False):
@@ -655,9 +614,9 @@ class Logs:
             Bulk modulus and density of sand in dictionary ``{'k': X, 'rho': X}``
         shale : :obj:`dict`
             Bulk modulus and density of shale in dictionary ``{'k': X, 'rho': X}``
-        oil : :obj:`ptcpy.proc.rockphysics.fluid.Oil`
+        oil : :obj:`Oil`
             Oil object
-        water : :obj:`ptcpy.proc.rockphysics.fluid.Brine`
+        water : :obj:`Brine`
             Brine object
         change : :obj:`dict` or :obj:`list`
             Changes to be applied to saturation logs in dictionary(ies)
@@ -668,7 +627,7 @@ class Logs:
         carb : :obj:`dict`, optional
             Bulk modulus and density of carbonate/calcite in dictionary
             ``{'k': X, 'rho': X}``
-        gas : :obj:`ptcpy.proc.rockphysics.fluid.Gas`, optional
+        gas : :obj:`Gas`, optional
             Gas object
         lfp : :obj:`bool`, optional
             Prepend `LFP_`` to every log (``True``) or not (``False``)
@@ -1460,12 +1419,8 @@ class Logs:
                       sgt='SGT', sot='SOT', phi='PHIT',
                       vp='VP', vs='VS', rho='RHOB',
                       ai='AI', vpvs='VPVS', theta=np.arange(0, 40, 5),
-                      seismic=None, wav=None, seissampling=1., seisshift=0.,
-                      seisreverse=False, trace_in_seismic=False,
-                      whichseismic='il', extendseismic=20, thetasub=1,
-                      prestack_wiggles=True, horizonset=None,
-                      intervals=None, facies=None,
-                      faciesfromlog=False, scenario4d=None,
+                      wav=None, seissampling=1., seisreverse=False,
+                      prestack_wiggles=True, scenario4d=None,
                       title=None, **kwargs_logs):
         """Display log track using any of the provided standard templates
         tailored to different disciplines and analysis
@@ -1475,13 +1430,10 @@ class Logs:
         template : :obj:`str`, optional
             Template (``petro``: petrophysical analysis,
             ``rock``: rock-physics analysis,
-            ``faciesclass``: facies-classification analysis,
             ``poststackmod``: seismic poststack modelling (with normal
             and averaged properties),
             ``prestackmod``: seismic prestack modelling (with normal
             and averaged properties),
-            ``seismic``: 3D seismic intepretation,
-            ``prestackseismic``: prestack/AVO seismic intepretation,
             ``4Dmod``: time-lapse seismic modelling)
         lfp : :obj:`bool`, optional
             Prepend `LFP_`` to every log (``True``) or not (``False``)
@@ -1521,9 +1473,6 @@ class Logs:
             Name of VP/VS log
         theta : :obj:`np.ndarray`
             Angles in degrees (required for prestack modelling)
-        seismic : :obj:`ptcpy.object.Seismic` or :obj:`ptcpy.object.SeismicIrregular` or :obj:`ptcpy.object.SeismicIrregular`, optional
-            Name of seismic data to visualize when required by template
-            (use ``None`` when not required)
         wav : :obj:`np.ndarray`, optional
             Wavelet to apply to synthetic seismic when required by template
         seissampling : :obj:`float`, optional
@@ -1534,38 +1483,15 @@ class Logs:
             or ``template=prestackseismic`` when ``trace_in_seismic=False``)
         seisreverse : :obj:`bool`, optional
             Reverse colors of seismic wavelet filling
-        trace_in_seismic : :obj:`bool`, optional
-            Display synthetic trace on top of real seismic (``True``) or
-            side-by-side with extractec seismic trace (``False``)
-        whichseismic : :obj:`str`, optional
-            ``il``: display inline section passing through well,
-            ``xl``: display crossline section passing through well.
-            Note that if well is not vertical an arbitrary path along the well
-            trajectory will be chosen
-        extendseismic : :obj:`int`, optional
-            Number of ilines and crosslines to add at the end of well toe when
-            visualizing a deviated well
-        thetasub : :obj:`int`, optional
-            Susampling factor for angle axis if ``template='prestackseismic'``
-            or ``template='prestackmod'``
         prestack_wiggles : :obj:`bool`, optional
             Use wiggles to display pre-stack seismic (``True``) or imshow
             (``False``)
-        horizonset : :obj:`dict`, optional
-            Horizon set to display if ``template='seismic'``
-        intervals : :obj:`int`, optional
-            level of intervals to be shown (if ``None``, intervals are not shown)
-        facies : :obj:`dict`, optional
-            Facies set
-        faciesfromlog : :obj:`str`, optional
-            Name of log curve with facies (if ``None`` estimate from ``facies``
-            definition directly)
         scenario4d : :obj:`str`, optional
             Name of scenario to be used as suffix to select fluid substituted
             well logs for ``template='4D'``
         kwargs_logs : :obj:`dict`, optional
             additional input parameters to be provided to
-            :func:`ptcpy.objects.Logs.visualize_logcurves`
+            :func:`visualize_logcurves`
 
         Returns
         -------
@@ -1661,45 +1587,6 @@ class Logs:
                                          np.nanmax(self.logs[vpvs])))),
                     depth=depthlog, **kwargs_logs)
 
-        elif template == 'faciesclass':
-            figsize = None if 'figsize' not in kwargs_logs.keys() \
-                else kwargs_logs['figsize']
-            fig, axs = plt.subplots(1, 9, sharey=True, figsize=figsize)
-            _, axs = \
-                self.visualize_logcurves(
-                    dict(GR=dict(logs=[gr],
-                                 colors=['k'],
-                                 xlim=(0, np.nanmax(self.logs[gr]))),
-                         RT=dict(logs=[rt],
-                                 colors=['k'],
-                                 logscale=True,
-                                 xlim=(np.nanmin(self.logs[rt]),
-                                       np.nanmax(self.logs[rt]))),
-                         RHOB=dict(logs=[rho],
-                                   colors=['k'],
-                                   xlim=((np.nanmin(self.logs[rho]),
-                                          np.nanmax(self.logs[rho])))),
-                         PHIT=dict(logs=[phi],
-                                   colors=['k'],
-                                   xlim=(0, 0.4)),
-                         VP=dict(logs=[vp],
-                                 colors=['k'],
-                                 xlim=(np.nanmin(self.logs[vp]),
-                                       np.nanmax(self.logs[vp]))),
-                         VS=dict(logs=[vs],
-                                 colors=['k'],
-                                 xlim=(np.nanmin(self.logs[vs]),
-                                       np.nanmax(self.logs[vs]))),
-                         Volume = dict(logs=[vsh, vcarb, vcoal],
-                                       colors=['green', '#94b8b8',
-                                               '#4d4d4d', 'yellow'],
-                                       xlim=(0, 1)),
-                         Sat = dict(logs=[sgt, sot],
-                                    colors=['red', 'green', 'blue'],
-                                    envelope=phi,
-                                    xlim=(0, 0.4))),
-                    depth=depthlog, axs=axs, **kwargs_logs)
-
         elif template == 'poststackmod':
             figsize = None if 'figsize' not in kwargs_logs.keys() \
                 else kwargs_logs['figsize']
@@ -1784,177 +1671,6 @@ class Logs:
                     depth=depthlog, seisreverse=seisreverse,
                     prestack_wiggles=prestack_wiggles, axs=axs, **kwargs_logs)
 
-        elif template == 'seismic':
-            if not self.vertical:
-                raise NotImplementedError('Cannot use template=seismic for non'
-                                          'vertical wells')
-            if seismic is None or wav is None:
-                raise ValueError('Provide a seismic data and a wavelet when '
-                                 'visualizing logs with seismic template')
-
-            if trace_in_seismic and depth=='MD':
-                trace_in_seismic=False
-                logging.warning('Cannot view trace on seismic with depth=MD')
-
-            figsize = None if 'figsize' not in kwargs_logs.keys() else \
-                kwargs_logs['figsize']
-            if trace_in_seismic:
-                fig = plt.figure(figsize=figsize)
-                axs = [plt.subplot2grid((1, 7), (0, i)) for i in range(6)]
-                axs.append(plt.subplot2grid((1, 7), (0, 5), colspan=2))
-            else:
-                fig, axs = plt.subplots(1, 7, sharey=True, figsize=figsize)
-
-            logcurves_display = dict(VP=dict(logs=[vp],
-                                             colors=['k'],
-                                             xlim=(np.nanmin(self.logs[vp]),
-                                                   np.nanmax(self.logs[vp]))),
-                                     VS=dict(logs=[vs],
-                                             colors=['k'],
-                                             xlim=(np.nanmin(self.logs[vs]),
-                                                   np.nanmax(self.logs[vs]))),
-                                     RHO=dict(logs=[rho],
-                                              colors=['k'],
-                                              xlim=(np.nanmin(self.logs[rho]),
-                                                    np.nanmax(self.logs[rho]))),
-                                     AI=dict(logs=[ai],
-                                         colors=['k'],
-                                         xlim=(np.nanmin(self.logs[ai]),
-                                               np.nanmax(self.logs[ai]))),
-                                     VPVS=dict(logs=[vpvs],
-                                               colors=['k'],
-                                               xlim=(np.nanmin(self.logs[vpvs]),
-                                                     np.nanmax(self.logs[vpvs]))))
-            if not trace_in_seismic:
-                logcurves_display['Stack'] = dict(log=ai,
-                                                  sampling=seissampling,
-                                                  wav=wav,
-                                                  title='Modelled Seismic')
-            _, axs = \
-                self.visualize_logcurves(logcurves_display,
-                                                  depth=depthlog,
-                                                  axs=axs, seisreverse=seisreverse,
-                                                  **kwargs_logs)
-
-            # add real seismic trace
-            realtrace = seismic['data'].extract_trace_verticalwell(self)
-
-            if not trace_in_seismic:
-                axs[-1] = _wiggletrace(axs[-1],
-                                       seismic['data'].tz + seisshift,
-                                       realtrace)
-                axs[-1].set_xlim(axs[-2].get_xlim())
-                axs[-1].set_title('Real Seismic (shift={})'.format(seisshift),
-                                  fontsize=12)
-            else:
-                # find well in il-xl
-                ilwell, xlwell = \
-                    _findclosest_well_seismicsections(self, seismic['data'],
-                                                      traj=False)
-
-                if 'ylim' in kwargs_logs.keys() and \
-                        kwargs_logs['ylim'] is not None:
-                    axs[-1].set_ylim(kwargs_logs['ylim'])
-                axs[-1].set_title('Real Seismic (shift={})'.format(seisshift),
-                                  fontsize=12)
-                axs[-1].invert_yaxis()
-
-                # find out from first plot and set ylim for all plots
-                if 'ylim' in kwargs_logs.keys():
-                    zlim_seismic = kwargs_logs['ylim']
-                else:
-                    zlim_seismic = axs[0].get_ylim()
-                for i in range(1, len(axs) - 1):
-                    axs[i].set_ylim(zlim_seismic)
-                    axs[i].invert_yaxis()
-                    axs[i].set_yticks([])
-                axs[-1].set_yticks([])
-
-                if horizonset is None:
-                    dictseis = {}
-                else:
-                    dictseis = dict(horizons=horizonset['data'],
-                                    horcolors=horizonset['colors'],
-                                    horlw=5)
-                _, axs[-1] = \
-                    self.view_in_seismicsection(seismic['data'], ax=axs[-1],
-                                                which=whichseismic,
-                                                display_wellname=False,
-                                                picks=False,
-                                                tzoom_index=False,
-                                                tzoom=zlim_seismic,
-                                                tzshift=seisshift,
-                                                cmap='seismic',
-                                                clip=1.,
-                                                cbar=True,
-                                                interp='sinc',
-                                                title='Real Seismic',
-                                                **dictseis)
-                if whichseismic == 'il':
-                    axs[-1].set_xlim(xlwell-extendseismic, xlwell+extendseismic)
-                else:
-                    axs[-1].set_xlim(ilwell-extendseismic, ilwell+extendseismic)
-
-                trace, zaxisreglog = \
-                    zerooffset_wellmod(self, depthlog,
-                                       seissampling, wav,
-                                       ai=ai, zlim=depthlog,
-                                       ax=axs[-1])[:2]
-                trace_center = xlwell if whichseismic == 'il' else ilwell
-                _wiggletrace(axs[-1], zaxisreglog,
-                             trace_center + (extendseismic/(4*np.nanmax(trace)))*trace,
-                             center=trace_center)
-
-        elif template == 'prestackseismic':
-            if seismic is None or wav is None:
-                raise ValueError('Provide a prestack seismic data and a wavelet '
-                                 'when visualizing logs with seismic template')
-            figsize = None if 'figsize' not in kwargs_logs.keys() else \
-                kwargs_logs['figsize']
-            fig, axs = plt.subplots(1, 7, sharey=True, figsize=figsize)
-            _, axs = \
-                self.visualize_logcurves(
-                    dict(VP=dict(logs=[vp],
-                                 colors=['k'],
-                                 xlim=(np.nanmin(self.logs[vp]),
-                                       np.nanmax(self.logs[vp]))),
-                         VS=dict(logs=[vs],
-                                 colors=['k'],
-                                 xlim=(np.nanmin(self.logs[vs]),
-                                       np.nanmax(self.logs[vs]))),
-                         RHO=dict(logs=[rho],
-                                  colors=['k'],
-                                  xlim=(np.nanmin(self.logs[rho]),
-                                        np.nanmax(self.logs[rho]))),
-                         AI=dict(logs=[ai],
-                                 colors=['k'],
-                                 xlim=(np.nanmin(self.logs[ai]),
-                                       np.nanmax(self.logs[ai]))),
-                         VPVS=dict(logs=[vpvs],
-                                   colors=['k'],
-                                   xlim=(np.nanmin(self.logs[vpvs]),
-                                         np.nanmax(self.logs[vpvs]))),
-                         Prestack=dict(theta=theta[::thetasub],
-                                       vp=vp,
-                                       vs=vs,
-                                       rho=rho,
-                                       sampling=seissampling,
-                                       wav=wav,
-                                       scaling=4)),
-                    depth=depthlog, seisreverse=seisreverse, axs=axs, **kwargs_logs)
-
-            # add real prestack seismic trace
-            realgather = \
-                seismic['data'].extract_gather_verticalwell(self, verb=True)
-            realgather = realgather[::thetasub]
-            axs[-1] = _wiggletracecomb(axs[-1], seismic['data'].tz + seisshift,
-                                       theta[::thetasub], realgather,
-                                       scaling=20)
-            if 'ylim' in kwargs_logs.keys() and kwargs_logs['ylim'] is not None:
-                axs[-1].set_ylim(kwargs_logs['ylim'])
-            axs[-1].set_title('Real Seismic')
-            axs[-1].invert_yaxis()
-
         elif template == '4Dmod':
             fig, axs = \
                 self.visualize_logcurves(
@@ -2015,18 +1731,4 @@ class Logs:
         else:
             raise ValueError('template={} does not exist'.format(template))
 
-        if template == 'faciesclass':
-            xlim_facies = axs[-1].get_xlim()
-            faciesnames = list(facies.keys())
-            faciescolors = [facies[faciesname].color for faciesname in
-                            facies.keys()]
-
-            if faciesfromlog:
-                axs[-1] = _visualize_facies(axs[-1], self,
-                                            faciesfromlog,
-                                            faciescolors,
-                                            faciesnames,
-                                            depth=depth)
-
-                axs[-1].set_xlim(xlim_facies)
         return fig, axs

@@ -19,9 +19,9 @@ class Gassmann:
 
     Parameters
     ----------
-    medium0 : :obj:`ptcpy.proc.rockphysics.solid.Rock`
+    medium0 : :obj:`solid.Rock`
         Initial saturated medium
-    fluid1 : :obj:`ptcpy.proc.rockphysics.fluid.Fluid`
+    fluid1 : :obj:`fluid.Fluid`
         Final fluid
     mask : :obj:`bool`, optional
         Apply mask where no fluid change is provided from state0 to state1
