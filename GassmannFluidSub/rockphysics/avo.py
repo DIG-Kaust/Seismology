@@ -466,7 +466,7 @@ def angle_reflectivity(vp, vs, rho, theta=0, method='zoeppritz'):
 
 def angle_reflectivity_multidims(vp, vs, rho, theta=0, method='zoeppritz'):
     r"""Angle dependent reflectivity for multi-dimensional elastic property
-    profiles. Refer to :func:`ptcpy.proc.seismicmod.avo.angle_reflectivity`
+    profiles. Refer to :func:`avo.angle_reflectivity`
     for detailed documentation.
 
     Parameters
@@ -583,7 +583,7 @@ def prestack_wellmod(logs, zaxis, theta, sampling, wav, ax=None, wavcenter=None,
 
     Parameters
     ----------
-    logs : :obj:`ptcpy.objects.Logs.Logs`
+    logs : :obj:`Logs`
         Logs object
     zaxis : :obj:`str`
         Label of log to use as z-axis
@@ -624,7 +624,7 @@ def prestack_wellmod(logs, zaxis, theta, sampling, wav, ax=None, wavcenter=None,
          (if ``None``, figure is not saved)
     kwargs_plot : :obj:`dict`, optional
         Additional parameters to be passed to
-        :func:`ptcpy.visual.utils._wiggletracecomb`
+        :func:`utils._wiggletracecomb`
 
     Returns
     -------
@@ -699,59 +699,3 @@ def prestack_wellmod(logs, zaxis, theta, sampling, wav, ax=None, wavcenter=None,
 
     return traces, zaxisreglog, fig, ax
 
-
-def prestack_geomod(geomodel, intervalnames, aveprops, wav, theta,
-                    wavcenter=None, vp=None, vs=None,
-                    rho=None, method='zoeppritz',
-                    plotflag=False, savefig=None, **kwargs_view):
-    """Create angle-dependent seismic gather from geomodel
-
-    Parameters
-    ----------
-    geomod : :obj:`ptcpy.objects.Seismic` or :obj:`ptcpy.objects.SeismicIrregular`
-        Geomodel created via :func:`ptcpy.proc.geomod.geomod.create_geomodel`
-        filled with discrete numbers corresponding to different intervals
-    intervalnames : :obj:`list`
-        Name of intervals to associate to discrete numbers in ``geomod``
-    aveprops : :obj:`dict`
-        Average elastic properties for each interval computed via
-        :func:`ptcpy.objects.Project.create_averageprops_intervals`
-        to use to create the
-        acoustic impedence model used to model synthetic seismic
-    wav : :obj:`np.ndarray`
-        Wavelet
-    theta : :obj:`np.ndarray`
-        Angles in degrees
-    wavcenter : :obj:`int`, optional
-        Index of wavelet center (if ``None`` using middle value of ``wav``)
-    ai : :obj:`str`, optional
-        Label of log to use as acoustic impedance in ``aveprops``
-    method : :obj:`np.ndarray`, optional
-        Method to use (``zoeppritz``, ``akirichards``, ``akirichards_alt``,
-        ``fatti``, ``shuey``, and ``bortfeld``)
-
-    Returns
-    -------
-    seismic : :obj:`np.ndarray`
-        Zero-offset seismic data of size
-        :math:`n_{theta} (\times n_y \times n_x) \times n_z`
-
-    """
-    vpgeomod = geomodel.copy(empty=True)
-    vpgeomod = vpgeomod.data
-    vsgeomod = vpgeomod.copy()
-    rhogeomod = vpgeomod.copy()
-
-    for iinterval, interval in enumerate(intervalnames):
-        # average properties
-        vpgeomod[geomodel.data == iinterval] = \
-            aveprops[vp][interval]['mean']
-        vsgeomod[geomodel.data == iinterval] = \
-            aveprops[vs][interval]['mean']
-        rhogeomod[geomodel.data == iinterval] = \
-            aveprops[rho][interval]['mean']
-
-    seismic, refl = prestack_mod(vpgeomod, vsgeomod, rhogeomod, theta, wav,
-                           wavcenter=wavcenter, method=method)
-    del vpgeomod, vsgeomod, rhogeomod
-    return seismic
