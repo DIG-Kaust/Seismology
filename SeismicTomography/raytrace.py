@@ -58,9 +58,45 @@ def _raytrace_vertical(s, r, dx, dz, ox, oz, nx, nz, x, z):
 
 
 def _raytrace_generic(s, r, dx, dz, ox, oz, nx, nz, x, z):
+    """Generic ray
+
+    Compute generic ray and associated tomographic matrix
+
+    Parameters
+    ----------
+    s : :obj:`list`
+        Source location
+    r : :obj:`list`
+        Receiver location
+    dx : :obj:`float`
+        Horizontal axis spacing
+    dz : :obj:`float`
+        Vertical axis spacing
+    ox : :obj:`float`
+        Horizontal axis origin
+    nx : :obj:`int`
+        Number of samples in horizontal axis
+    nz : :obj:`float`
+        Number of samples in vertical axis
+    z : :obj:`np.ndarray`
+        Vertical axis
+
+    Returns
+    -------
+    R : :obj:`np.ndarray`
+        Tomographic dense matrix
+    c : :obj:`np.ndarray`
+        Column indices (index of grid cells)
+    v : :obj:`np.ndarray`
+        Value (lenght of rays in grid cells)
+
+    """
+    # Define indices of source and parametric straigh ray
     xray, zray = s[0], s[1]
     m = (r[1] - s[1]) / (r[0] - s[0])
     q = s[1] - m * s[0]
+
+    # Create tomographic matrix
     R = np.zeros(nx * nz)
     c, v = np.zeros(3 * (nx + nz)), np.zeros(3 * (nx + nz))
     ic = 0
@@ -69,67 +105,51 @@ def _raytrace_generic(s, r, dx, dz, ox, oz, nx, nz, x, z):
         ix, iz = int((xray + dx / 2 - x[0]) / dx), int(
             (zray + dz / 2 - z[0]) / dz)
         # computing z intersecting x-edge of the grid point
-        # print('xray, x[ix]', xray, x[ix])
         xedge = x[ix] + dx / 2
         zedge = xedge * m + q
         if xedge > r[0]:
             xedge = r[0]
             zedge = r[1]
-        # print('xedge, zedge', xedge, zedge)
         izedge = int((zedge + dz / 2 - z[0]) / dz)
         if izedge == iz:
             # find lenght of ray from x to x-edge
             rray = sqrt((xedge - xray) ** 2 + (zedge - zray) ** 2)
             R[ix * nz + iz] = rray
-            # print(xedge, zedge)
             c[ic], v[ic] = ix * nz + iz, rray
             ic += 1
-            # print('rray', rray)
         elif izedge > iz:
-            # split ray from x to x-edge into multiple rays passing through different z-cells
+            # next zedge above current z cell: split ray from x to x-edge into
+            # multiple rays passing through different z-cells
             nzcells = izedge - iz + 1
-            # print('nzcells', nzcells)
             zend = (x[ix + 1] - dx / 2) * m + q
             if zend > r[1]:
                 zend = r[1]
-            # print('zray, zend', zray, zend)
             zs = z[iz] + np.arange(nzcells - 1) * dz + dz // 2
             zs = np.insert(zs, 0, zray)
             zs = np.append(zs, zend)
             xs = (zs - q) / m
-            # print('xs', xs, 'zs', zs)
-            #plt.plot(xs, zs, '.y', ms=10)
             rrays = np.sqrt(np.diff(xs) ** 2 + np.diff(zs) ** 2)
             R[ix * nz + iz: ix * nz + iz + nzcells] = rrays
             c[ic:ic + nzcells], v[ic:ic + nzcells] = np.arange(ix * nz + iz,
                                                                ix * nz + iz + nzcells), rrays
             ic += nzcells
-            # print('rrays', rrays)
         else:
-            # split ray from x to x-edge into multiple rays passing through different z-cells
+            # next zedge below current z cell: split ray from x to x-edge into
+            # multiple rays passing through different z-cells
             nzcells = iz - izedge + 1
-            # print('nzcells', nzcells)
             zend = (x[ix + 1] - dx / 2) * m + q
             if zend < r[1]:
                 zend = r[1]
-            # print('zray, zend', zray, zend)
             zs = z[iz] - np.arange(nzcells - 1) * dz - dz / 2
             zs = np.insert(zs, 0, zray)
             zs = np.append(zs, zend)
             xs = (zs - q) / m
-            # print('xs', xs, 'zs', zs)
-            #plt.plot(xs, zs, '.y', ms=10)
             rrays = np.sqrt(np.diff(xs) ** 2 + np.diff(zs) ** 2)
-            # print(ix * nz + iz - nzcells, ix * nz + iz)
             R[ix * nz + iz - nzcells + 1: ix * nz + iz + 1] = rrays[::-1]
             c[ic:ic + nzcells], v[ic:ic + nzcells] = np.arange(
                 ix * nz + iz - nzcells + 1, ix * nz + iz + 1), rrays[::-1]
             ic += nzcells
-            # print('rrays', rrays)
-            # break
-        #plt.plot([xray, xedge], [zray, zedge], '.-y', ms=10)
         xray, zray = xedge, zedge
-        # print(xray, zray)
     return R, c[:ic].astype(np.int), v[:ic]
 
 
@@ -190,9 +210,9 @@ def raytrace(s, r, dx, dz, ox, oz, nx, nz, x, z):
 
 
 def straigh_ray(s, r, nray=10):
-    """Analytical straigh ray
+    """Analytical straight ray
 
-    Compute analytical expression for straigh ray given source and
+    Compute analytical expression for straight ray given source and
     receiver pair
 
     Parameters
@@ -220,10 +240,10 @@ def straigh_ray(s, r, nray=10):
 
 
 def straigh_rays(s, r, nray=10):
-    """Analytical straigh rays
+    """Analytical straight rays
 
-    Compute analytical expression for straigh ray given source and
-    receiver pair
+    Compute analytical expression for straight rays given set of sources and
+    receivers
 
     Parameters
     ----------
@@ -237,7 +257,7 @@ def straigh_rays(s, r, nray=10):
     Returns
     -------
     rays : :obj:`list`
-        Ray coordinatess
+        Ray coordinates
 
     """
     ns = s.shape[1]
