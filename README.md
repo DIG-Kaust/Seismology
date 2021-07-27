@@ -14,7 +14,7 @@ The repository is organized as follows:
    - [**GassmannFluidSub**](https://github.com/DIG-Kaust/Seismology/blob/main/GassmannFluidSub/Gassmann.ipynb): implement basic rock physics equations and Gassmann substitution and apply it to the Smehaia well log.
    - [**SeismicModelling**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicModelling/SeismicModellingInversion.ipynb): perform convolutional and AVO modelling, and apply pre-stack inversion
    - [**RayTrace**](https://github.com/DIG-Kaust/Seismology/blob/main/RayTrace/RayTrace.ipynb): implement 2D raytracing by solving the associated ODE
-   - **SeismicTomography**: setup the 2D tomographic matrix and solve the associated inverse problem
+   - [**SeismicTomography**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicTomography/SeismicTomography.ipynb): setup the 2D tomographic matrix and solve the associated inverse problem
    - **Obspy**: a mild introduction to Obspy and its usage for epicenter localization of earthquakes
    - **ReflectionSeismic**: implement basic NMO processing and learn how to work with SEGY files using *segyio* and the Volve dataset.
 
