@@ -15,7 +15,7 @@ The repository is organized as follows:
    - [**SeismicModelling**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicModelling/SeismicModellingInversion.ipynb): perform convolutional and AVO modelling, and apply pre-stack inversion
    - [**RayTrace**](https://github.com/DIG-Kaust/Seismology/blob/main/RayTrace/RayTrace.ipynb): implement 2D raytracing by solving the associated ODE
    - [**SeismicTomography**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicTomography/SeismicTomography.ipynb): create the 2D tomographic matrix and solve the associated inverse problem
-   - [**Obspy**](https://github.com/DIG-Kaust/Seismology/blob/main/Obspy/Obspy.ipynb): a short introduction to Obspy and its usage for epicenter localization of earthquakes
+   - [**Obspy**](https://github.com/DIG-Kaust/Seismology/blob/main/Obspy/ObspyIntro.ipynb): a short introduction to Obspy and its usage for epicenter localization of earthquakes
    - [**ReflectionSeismic**](https://github.com/DIG-Kaust/Seismology/blob/main/ReflectionSeismic): implement basic NMO processing and learn how to work with SEGY files using *segyio* and the Volve dataset.
 
 ## Environment
