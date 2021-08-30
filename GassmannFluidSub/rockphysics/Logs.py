@@ -406,24 +406,15 @@ class Logs:
     loadlogs : :obj:`bool`, optional
         Load data into ``self.logs`` variable during initialization (``True``)
         or not (``False``)
-    kind : :obj:`str`, optional
-        ``local`` when data are stored locally in a folder,'
-        ``onprem`` when data are stored on-premise,
-        ``omnia`` when data are stored in Omnia datalake storage
-    ads : :obj:`azure.datalake.store.core.AzureDLFileSystem`, optional
-        omnia datalake access pointer (needed only if ``kind='omnia'``)
     verb : :obj:`str`, optional
         Verbosity
 
     """
-    def __init__(self, filename, wellname=None, loadlogs=True,
-                 kind='local', ads=None, verb=False):
+    def __init__(self, filename, wellname=None, loadlogs=True, verb=False):
         self.filename = filename
         self.df = None
         self.wellname = filename if wellname is None else wellname
         self._loadlogs = loadlogs
-        self._kind = kind
-        self._ads = ads
         self._verb = verb
         if self._loadlogs:
             self._logs = self._read_logs()
@@ -450,14 +441,7 @@ class Logs:
         """
         if self._verb:
             print('Reading {} logs...'.format(self.filename))
-        if self._kind in ('local', 'onprem') or \
-            (self._kind == 'omnia' and self._ads is None):
-            logs = lasio.read(self.filename)
-        elif self._kind == 'omnia':
-            with self._ads.open(self.filename, 'rb') as f:
-                logs = lasio.read(f.read().decode('utf-8'))
-        else:
-            raise NotImplementedError('kind must be local, onprem, or omnia')
+        logs = lasio.read(self.filename)
         # ensure there is no TWT curve leaking in... we only want to get them
         # from TD curves or checkshots so we can keep track of them...
         if 'TWT' in logs.keys():
@@ -1618,7 +1602,8 @@ class Logs:
                                    lw=[2, 8],
                                    xlim=(np.nanmin(self.logs[vpvs]),
                                          np.nanmax(self.logs[vpvs]))),
-                         Stack=dict(log=ai, sampling=1., wav=wav, title='Modelled Seismic'),
+                         Stack=dict(log=ai, sampling=seissampling, wav=wav,
+                                    title='Modelled Seismic'),
                          Stack1=dict(log=ai + '_mean', sampling=seissampling,
                                      wav=wav, title='Modelled from blocky logs')),
                     depth=depthlog, seisreverse=seisreverse, axs=axs, **kwargs_logs)
@@ -1706,7 +1691,7 @@ class Logs:
                                     sampling=seissampling,
                                     wav=wav),
                          Diff=dict(logs=[ai+'_'+scenario4d, ai],
-                                   sampling=1.,
+                                   sampling=seissampling,
                                    wav=wav),
                          Prestack=dict(theta=theta,
                                        vp=vp,
