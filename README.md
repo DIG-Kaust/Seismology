@@ -20,7 +20,8 @@ The repository is organized as follows:
 
 ## Environment
 
-To ensure reproducibility of the results, we have provided a `environment.yml` file. Ensure to have installed Anaconda or Miniconda on your computer. If you are not familiar with it, we suggesting using the [KAUST Miniconda Install recipe](https://github.com/kaust-rccl/ibex-miniconda-install). This has been tested both on macOS and Unix operative systems.
+To ensure reproducibility of the results, we have provided an `environment.yml` file. Ensure to have installed Anaconda or Miniconda on your computer. If you are not familiar with it, we suggest using the 
+[KAUST Miniconda Install recipe](https://github.com/kaust-rccl/ibex-miniconda-install). This has been tested both on macOS and Unix operative systems.
 
 After that simply run:
 ```
