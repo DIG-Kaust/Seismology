@@ -43,8 +43,7 @@ class Gassmann:
                 kmatrix - kdry / kmatrix ** 2)
 
         musat1 = self.medium0.mu
-        rhosat1 = self.medium0.matrix.rho*(1-self.medium0.poro) + \
-                  self.fluid1.rho*self.medium0.poro
+        rhosat1 = self.medium0.matrix.rho + self.medium0.poro * (self.fluid1.rho - self.medium0.fluid.rho)
         vpsat1 = _compute_vp(ksat1, musat1, rhosat1)
         vssat1 = _compute_vs(musat1, rhosat1)
 
@@ -55,5 +54,5 @@ class Gassmann:
             rhosat1 = mask*rhosat1 + (1 - mask)*self.medium0.rho
 
         self.medium1 = Rock(vpsat1, vssat1, rhosat1,
-                             self.medium0.matrix, self.fluid1,
-                             self.medium0.poro)
+                            self.medium0.matrix, self.fluid1,
+                            self.medium0.poro)
