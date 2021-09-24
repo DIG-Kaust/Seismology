@@ -240,7 +240,6 @@ class Elastic:
         self._vpvs = self.vp / self.vs
         return self._vpvs
 
-
     @property
     def k(self):
         self._k = _compute_bulk(self.vp, self.vs, self.rho)

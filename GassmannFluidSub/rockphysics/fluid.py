@@ -152,9 +152,18 @@ class Brine(Elastic):
         self.vp, self.rho = _batze_wang_brine(self.temp, self.pres, self.sal)
         self.vs = 0 if not isinstance(self.vp, np.ndarray) \
             else np.zeros_like(self.vp)
+        self._k = kg_m3_to_g_cm3(self.rho) * (self.vp ** 2) * 1e3
+       
     @property
     def k(self):
-        self._k = kg_m3_to_g_cm3(self.rho) * (self.vp**2) * 1e3
+        return self._k
+    
+    @k.setter
+    def k(self, value=None):
+        if value is None:
+            self._k = kg_m3_to_g_cm3(self.rho) * (self.vp ** 2) * 1e3
+        else:
+            self._k = value
         return self._k
 
 
@@ -197,10 +206,18 @@ class Oil(Elastic):
         self.vp, self.rho = _batze_wang_oil(temp, pres, gasgrav, gor, self.rho0)
         self.vs = 0 if not isinstance(self.vp, np.ndarray) \
             else np.zeros_like(self.vp)
-
+        self._k = kg_m3_to_g_cm3(self.rho) * (self.vp ** 2) * 1e3
+        
     @property
     def k(self):
-        self._k = kg_m3_to_g_cm3(self.rho) * (self.vp ** 2) * 1e3
+        return self._k
+    
+    @k.setter
+    def k(self, value=None):
+        if value is None:
+            self._k = kg_m3_to_g_cm3(self.rho) * (self.vp ** 2) * 1e3
+        else:
+            self._k = value
         return self._k
 
 

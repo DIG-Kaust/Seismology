@@ -43,7 +43,8 @@ class Gassmann:
                 kmatrix - kdry / kmatrix ** 2)
 
         musat1 = self.medium0.mu
-        rhosat1 = self.medium0.matrix.rho + self.medium0.poro * (self.fluid1.rho - self.medium0.fluid.rho)
+        rhosat1 = self.medium0.matrix.rho*(1-self.medium0.poro) + \
+                  self.fluid1.rho*self.medium0.poro
         vpsat1 = _compute_vp(ksat1, musat1, rhosat1)
         vssat1 = _compute_vs(musat1, rhosat1)
 
