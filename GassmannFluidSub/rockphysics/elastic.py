@@ -262,10 +262,3 @@ class Elastic:
                 'VS: {}\n'.format(self.vs) + \
                 'Rho: {}\n'.format(self.rho)
         return descr
-
-
-
-class ElasticLimited:
-    def __init__(self, k, rho):
-        self.k = k
-        self.rho = rho

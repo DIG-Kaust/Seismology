@@ -711,7 +711,7 @@ class Logs:
         if vshcutoff[0] > 0. or vshcutoff[1] < 1.:
             cutoff = cutoff | (vsh < vshcutoff[0]) | (vsh > vshcutoff[1])
 
-        # fix nans fpr elastic params
+        # fix nans for elastic params
         nans = cutoff | np.isnan(vp) | np.isnan(vs) | np.isnan(rho) | np.isnan(
             phi) | \
                np.isnan(vsh) | np.isnan(so0) | np.isnan(sg0)
