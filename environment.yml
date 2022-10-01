@@ -14,7 +14,7 @@ dependencies:
   - seaborn
   - scikit-learn
   - scikit-image
-  - pylops
+  - pylops<=1.18.3
   - cartopy
   - pip:
     - lasio
