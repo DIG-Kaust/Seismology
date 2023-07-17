@@ -3,68 +3,59 @@ import scipy as sp
 from pylops.signalprocessing import FFT2D
 
 
-def fkdispersion(data, nfft, dx, dt, vdisp):
+def parkdispersion(data, dx, dt, cmin, cmax, dc, fmax):
+    """Dispersion panel
     
-    nx, nt = data.shape
-    nvel = vdisp.size
+    Calculate dispersion curves using the method of
+    Park et al. 1998
     
-    # Fk spectrum
-    F2Op = FFT2D(dims=(nx, nt), dirs=(-2, -1), nffts=(nfft, nfft), sampling=(dx, dt), real=True)
-    f = F2Op.f2
-    kx = np.flipud(F2Op.f1[:nfft//2-1])
-    D = (F2Op @ data.ravel()).reshape(nfft, nfft//2+1)
-    D = np.fft.fftshift(np.abs(D), axes=0)[:nfft//2-1]
-    
-    # Resample v axis
-    Ddisp = np.zeros((nvel, nfft//2+1))
-    for iif in np.arange(1, nfft//2+1):
-        vdisp_sampled = f[iif]/kx
-        vdisp_sampled[0] = vdisp_sampled[1]
-        Ddisp[:, iif] = np.interp(vdisp, vdisp_sampled, D[:, iif])
-    return Ddisp
-
-
-def get_fft(traces, dt, nt):
-    # Get temporal Fourier transform for each of the traces
-    # f = np.linspace(0.0, 1.0/(2.0*dt), nt//2)
-    f = sp.fftpack.fftfreq(nt, dt)
-    U = sp.fftpack.fft(traces)
-    if np.size(U.shape) > 1:
-        return U[:, 0:nt//2], f[0:nt//2]
-    else:
-        return U[0:nt//2], f[0:nt//2]
-
-
-def parkdispersion(traces, dx, dt, cmin, cmax, dc, fmax):
-    """ calculate dispersion curves after Park et al. 1998
-    INPUTS
-    traces: SU traces
-    dx: distance between stations (m)
-    cmax: upper velocity limit (m/s)
-    fmax: upper frequency limit (Hz)
-    OUTPUTS
-    f: 1d array frequency vector
-    c: 1d array phase velocity vector
-    img: 2d array (c x f) dispersion image
-    fmax_idx: integer index corresponding to the given fmax
-    U: 2d array (nr x npts//2) Fourier transform of traces
-    t: 1d array time vector
+    Parameters
+    ----------
+    data : :obj:`numpy.ndarray`
+        Data of size `nx x nt`
+    dx : :obj:`float`
+        Spatial sampling
+    dt : :obj:`float`
+        Time sampling
+    cmin : :obj:`float`
+        Minimum velocity
+    cmax : :obj:`float`
+        Maximum velocity
+    dc : :obj:`float`
+        Velocity sampling
+    fmax : :obj:`float`
+        Maximum frequency
+        
+    Returns
+    -------
+    f : :obj:`numpy.ndarray`
+        Frequency axis
+    c : :obj:`numpy.ndarray`
+        Velocity axis`
+    disp : :obj:`numpy.ndarray`
+        Dispersion panel of size `nc x nf`
     """
-    nr, nt = traces.shape
-    t = np.linspace(0.0, nt*dt, nt)
+    nr, nt = data.shape
     
-    # Fx spectrum
-    U, f = get_fft(traces, dt, nt)
-    c = np.arange(cmin, cmax, dc)  # set phase velocity range
+    # Axes
+    t = np.linspace(0.0, nt*dt, nt)
+
+    f = sp.fftpack.fftfreq(nt, dt)[:nt//2]
     df = f[1] - f[0]
     fmax_idx = int(fmax//df)
-    
-    img = np.zeros((len(c), fmax_idx))
+
+    c = np.arange(cmin, cmax, dc)  # set phase velocity range
     x = np.linspace(0.0, (nr-1)*dx, nr)
-    for fi in range(fmax_idx):  # loop over frequency range
-        for ci in range(len(c)):  # loop over phase velocity range
+
+    # Fx spectrum
+    U = sp.fftpack.fft(data)[:, :nt//2]
+    
+    # Dispersion panel
+    disp = np.zeros((len(c), fmax_idx))
+    for fi in range(fmax_idx):
+        for ci in range(len(c)):
             k = 2.0*np.pi*f[fi]/(c[ci])
-            img[ci, fi] = np.abs(
+            disp[ci, fi] = np.abs(
                 np.dot(dx * np.exp(1.0j*k*x), U[:, fi]/np.abs(U[:, fi])))
 
-    return f, c, img, fmax_idx, U, t
+    return f, c, disp

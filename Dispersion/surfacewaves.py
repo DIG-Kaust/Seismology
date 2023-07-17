@@ -67,6 +67,36 @@ def ormsby(t, f=(5.0, 10.0, 45.0, 50.0), taper=None):
 
 
 def surfacewavedata(nt, dt, nx, dx, nfft, fdisp, vdisp, wav):
+    r"""Surface wave data
+
+    Synthetise surface wave only seismic data from dispersion relation
+
+    Parameters
+    ----------
+    nt : :obj:`int`
+        number of time samples
+    dt : :obj:`float`
+        time sampling
+    nx : :obj:`int`
+        number of spatial samples
+    dx : :obj:`float`
+        spatial sampling
+    nx : :obj:`int`
+        number of fft samples
+    fdisp : :obj:`int`
+        frequency axis of dispersion relation
+    vdisp : :obj:`int`
+        velocity axis of dispersion relation in km/s
+    wav : :obj:`numpy.ndarray`
+        source wavelet
+    
+    Returns
+    -------
+    dshift : :obj:`numpy.ndarray`
+        Data
+
+    """
+
     # Axes and gridded phase velocity
     t, x = np.arange(nt)*dt, np.arange(nx)*dx
     f = np.fft.rfftfreq(nfft, dt)
@@ -83,4 +113,4 @@ def surfacewavedata(nt, dt, nx, dx, nfft, fdisp, vdisp, wav):
     Dshift = D * shifts
     dshift = np.fft.irfft(Dshift, n=nfft, axis=1)[:, :nt]
 
-    return dshift
+    return dshift, f, vf
