@@ -58,4 +58,4 @@ def parkdispersion(data, dx, dt, cmin, cmax, dc, fmax):
             disp[ci, fi] = np.abs(
                 np.dot(dx * np.exp(1.0j*k*x), U[:, fi]/np.abs(U[:, fi])))
 
-    return f, c, disp
+    return f[:fmax_idx], c, disp
