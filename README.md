@@ -12,12 +12,13 @@ The repository is organized as follows:
 
    - [**PlaneWave**](https://github.com/DIG-Kaust/Seismology/blob/main/PlaneWave/PlaneWave.ipynb): create and display plane waves in time-space and wavenumber domain.
    - [**GassmannFluidSub**](https://github.com/DIG-Kaust/Seismology/blob/main/GassmannFluidSub/Gassmann.ipynb): implement basic rock physics equations and Gassmann substitution and apply it to the Smehaia well log.
-   - [**SeismicModelling**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicModelling/SeismicModellingInversion.ipynb): perform convolutional and AVO modelling, and apply pre-stack inversion
-   - [**RayTrace**](https://github.com/DIG-Kaust/Seismology/blob/main/RayTrace/RayTrace.ipynb): implement 2D raytracing by solving the associated ODE
-   - [**SeismicTomography**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicTomography/SeismicTomography.ipynb): create the 2D tomographic matrix and solve the associated inverse problem
+   - [**SeismicModelling**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicModelling/SeismicModellingInversion.ipynb): perform convolutional and AVO modelling, and apply pre-stack inversion.
+   - [**RayTrace**](https://github.com/DIG-Kaust/Seismology/blob/main/RayTrace/RayTrace.ipynb): implement 2D raytracing by solving the associated ODE.
+   - [**SeismicTomography**](https://github.com/DIG-Kaust/Seismology/blob/main/SeismicTomography/SeismicTomography.ipynb): create the 2D tomographic matrix and solve the associated inverse problem.
    - [**ReflectionSeismic**](https://github.com/DIG-Kaust/Seismology/blob/main/ReflectionSeismic): implement basic NMO processing and learn how to work with SEGY files using *segyio* and the Volve dataset.
+   - [**TimeMigration**](https://github.com/DIG-Kaust/Seismology/blob/main/TimeMigration/TimeMigration.ipynb): implement basic time-domain post-stack Kirchhoff demigration-migration on simple synthetic dataset.
    - [**Dispersion**](https://github.com/DIG-Kaust/Seismology/blob/main/Dispersion/Dispersion.ipynb): create a surface-wave only seismic dataset, compute dispersion panel and perform surface wave dispersion curve inversion.
-   - [** Obspy**](https://github.com/DIG-Kaust/Seismology/blob/main/Obspy/ObspyIntro.ipynb): a short introduction to Obspy and its usage for epicenter localization of earthquakes
+   - [**Obspy**](https://github.com/DIG-Kaust/Seismology/blob/main/Obspy/ObspyIntro.ipynb): a short introduction to Obspy and its usage for epicenter localization of earthquakes
 
 
 ## Environment
