@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 
-def fun(x, nlayers, t, vdispobs):
+def fun(x, nlayers, t, vdispobs, dc=0.005):
     r"""Surface wave inversion misfit function
 
     Create a dispersion curve from the input parameters 
@@ -19,7 +19,9 @@ def fun(x, nlayers, t, vdispobs):
         Period
     vdispobs : :obj:`numpy.ndarray`
         Observed dispersion curve
-        
+    dc : :obj:`float`
+        Phase velocity increment for root finding.
+ 
     Returns
     -------
     loss : :obj:`float`
@@ -34,7 +36,7 @@ def fun(x, nlayers, t, vdispobs):
     model = np.vstack([thick, vp, vs, rho]).T
     
     # Compute the Rayleigh-wave modal dispersion curves
-    pd = PhaseDispersion(*model.T)
+    pd = PhaseDispersion(*model.T, dc=dc)
     cpr = pd(t, mode=0, wave="rayleigh") 
     vdisp = cpr[1]
 
