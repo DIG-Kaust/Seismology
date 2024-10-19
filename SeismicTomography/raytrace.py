@@ -150,7 +150,7 @@ def _raytrace_generic(s, r, dx, dz, ox, oz, nx, nz, x, z):
                 ix * nz + iz - nzcells + 1, ix * nz + iz + 1), rrays[::-1]
             ic += nzcells
         xray, zray = xedge, zedge
-    return R, c[:ic].astype(np.int), v[:ic]
+    return R, c[:ic].astype(np.int64), v[:ic]
 
 
 def raytrace(s, r, dx, dz, ox, oz, nx, nz, x, z):
